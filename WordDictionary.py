@@ -34,8 +34,60 @@ class WordDictionary(object):
 
         return False
 
-obj = WordDictionary()
+
+class TrieNode(object):
+    def __init__(self, char):
+        self.val = char
+        self.children = {}
+        self.isWord = False
+
+
+class WordDictionary2(object):
+
+    def __init__(self):
+        self.root = TrieNode(0)
+
+    def addWord(self, word):
+        node = self.root
+        for w in word:
+            if w in node.children:
+                node = node.children[w]
+            else:
+                newNode = TrieNode(w)
+                node.children[w] = newNode
+                node = node.children[w]
+        node.isWord = True
+
+    def search(self, word):
+        node = self.root
+
+        def dfs(node, word, i):
+            if i == len(word):
+                return False
+            if i == len(word) - 1 and node.isWord:
+                return True
+            elif i == len(word) - 1 and not node.isWord:
+                return False
+            if word[i] != '.':
+                if word[i] not in node.children:
+                    return False
+                else:
+                    dfs(node.children[word[i]], word, i + 1)
+            else:
+                if node.val != word[i]:
+                    return False
+                for v in node.children.values():
+                    dfs(v, word, i + 1)
+
+        # Bug, forgot to check '.' at first letter
+        if word[0] not in node.children:
+            return False
+        else:
+            return dfs(node.children[word[0]], word, 0)
+
+obj = WordDictionary2()
 obj.addWord("word")
 obj.addWord("work")
 obj.addWord("wolf")
 print obj.search(".ord")
+print obj.search("w.rd")

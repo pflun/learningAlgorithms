@@ -73,5 +73,5 @@ class Solution2(object):
 
         return nums
 
-test = Solution2()
+test = Solution()
 print test.sortColors([0, 1, 0, 2, 1, 2, 0])
